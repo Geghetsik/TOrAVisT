@@ -7,8 +7,8 @@ class DataComponent {
 public:
 	
 private:
-	AttributeAxis<T>* attributeAxis;
 	T 		  value;
+	AttributeAxis<T>* attributeAxis;
 	DataEntry*	  dataEntry;	
 	
 };

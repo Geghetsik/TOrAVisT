@@ -10,8 +10,10 @@ class DataComponent {
 		bool 				isIndependent;
 		bool 				isTarget;
 		bool				isConstraint;
-		Point				
-		std::set<DataComponents>	attributeValues.
+		Point				minPoint;
+		Point				maxPoint;
+		std::map<T, Point>
+		std::set<DataComponent>		attributeValues.
 	
 };
 
