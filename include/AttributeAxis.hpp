@@ -12,8 +12,8 @@ class DataComponent {
 		bool				isConstraint;
 		Point				minPoint;
 		Point				maxPoint;
-		std::map<T, Point>
-		std::set<DataComponent>		attributeValues.
+		std::map<T, Point>		mappingPonits;
+		std::set<DataComponent>		attributeValues;
 	
 };
 
