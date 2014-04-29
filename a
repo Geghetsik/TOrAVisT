@@ -1,5 +1,9 @@
-commit 47cad8f7cc09add4f27f30e6618170c35e4af694
-Author: geghetsik <geghetsik@ubuntu.(none)>
-Date:   Mon Apr 14 22:13:56 2014 +0400
-
-    first commit
+git rm    src/AttributeAxis.hpp
+git rm    src/DataComponent.hpp
+git rm    src/DataEntry.hpp
+git rm    src/Makefile
+git rm    src/TargetConstraintPair.hpp
+git rm    src/Task.hpp
+git rm    src/Toravist
+git rm    src/main.o
+git rm    src/src.pro

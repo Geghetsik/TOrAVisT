@@ -14,5 +14,7 @@ HEADERS += include/AttributeAxis.hpp \
            include/DataComponent.hpp \
            include/DataEntry.hpp \
            include/TargetConstraintPair.hpp \
-           include/Task.hpp
-SOURCES += src/main.cpp
+           include/Task.hpp \
+	   include/MainWindow.hpp
+SOURCES += src/main.cpp \
+	   src/MainWindow.cpp

@@ -1,14 +1,15 @@
-#ifndef DATA_ENTRY_HPP
-#define DATA_ENTRY_HPP
+#ifndef DATA_POLYLINE_HPP
+#define DATA_POLYLINE_HPP
 
 template <class T>
 
-class DataEntry {
+class DataPolyline {
+
 	public:
 
 	private:
 		bool 				isDataOfInterest;
-		Color 				color;
+		QColor 				color;
 		std::vector<DataComponent>	attributeValues.
 	
 };
@@ -16,4 +17,4 @@ class DataEntry {
 
 
 
-#endif  // DATA_ENTRY_HPP
+#endif  // DATA_POLYLINE_HPP
