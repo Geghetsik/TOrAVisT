@@ -11,10 +11,19 @@ INCLUDEPATH += include
 
 # Input
 HEADERS += include/AttributeAxis.hpp \
+           include/AxesLayout.hpp \
+           include/PointOnAxis.hpp \
            include/DataComponent.hpp \
            include/DataEntry.hpp \
            include/TargetConstraintPair.hpp \
            include/Task.hpp \
-	   include/MainWindow.hpp
+		   include/Toravist.hpp
 SOURCES += src/main.cpp \
-	   src/MainWindow.cpp
+		   src/Toravist.cpp \
+           src/AttributeAxis.cpp \
+           src/AxesLayout.cpp \
+           src/DataComponent.cpp \
+           src/DataEntry.cpp \
+           src/PointOnAxis.cpp 
+#          src/TargetConstraintPair.cpp \
+#          src/Task.cpp 

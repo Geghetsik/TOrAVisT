@@ -1,12 +1,13 @@
 #include <QApplication>
-#include <MainWindow.hpp>
+#include <Toravist.hpp>
 
 int main(int argc, char *argv[])
 {
 
 	QApplication app(argc, argv);
-	MainWindow window;
-	window.show();
+	Toravist appWindow;
+	appWindow.setGeometry(100, 100, 800, 500);
+	appWindow.show();
 	return app.exec();
 
 }

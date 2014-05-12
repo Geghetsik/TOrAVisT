@@ -4,7 +4,6 @@
 
 class AttributeAxis;
 class Constraint;
-class Color;
 
 class Task {
 	public:
@@ -12,7 +11,7 @@ class Task {
 	private:
 		std::vector<AttributeAxis*>	targets;
 		std::vector<Constraint*>	constraints;
-		Color				color;
+		QColor				color;
 	
 };
 

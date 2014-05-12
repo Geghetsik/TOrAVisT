@@ -1,15 +1,15 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'MainWindow.hpp'
+** Meta object code from reading C++ file 'Toravist.hpp'
 **
-** Created: Wed May 7 02:47:45 2014
+** Created: Mon May 12 04:12:43 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "include/MainWindow.hpp"
+#include "include/Toravist.hpp"
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'MainWindow.hpp' doesn't include <QObject>."
+#error "The header file 'Toravist.hpp' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 63
 #error "This file was generated using the moc from 4.8.1. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -17,7 +17,7 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-static const uint qt_meta_data_MainWindow[] = {
+static const uint qt_meta_data_Toravist[] = {
 
  // content:
        6,       // revision
@@ -31,23 +31,23 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      12,   11,   11,   11, 0x08,
-      19,   11,   11,   11, 0x08,
+      10,    9,    9,    9, 0x08,
+      21,    9,    9,    9, 0x08,
 
        0        // eod
 };
 
-static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0load()\0about()\0"
+static const char qt_meta_stringdata_Toravist[] = {
+    "Toravist\0\0loadData()\0about()\0"
 };
 
-void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void Toravist::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         Q_ASSERT(staticMetaObject.cast(_o));
-        MainWindow *_t = static_cast<MainWindow *>(_o);
+        Toravist *_t = static_cast<Toravist *>(_o);
         switch (_id) {
-        case 0: _t->load(); break;
+        case 0: _t->loadData(); break;
         case 1: _t->about(); break;
         default: ;
         }
@@ -55,33 +55,33 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     Q_UNUSED(_a);
 }
 
-const QMetaObjectExtraData MainWindow::staticMetaObjectExtraData = {
+const QMetaObjectExtraData Toravist::staticMetaObjectExtraData = {
     0,  qt_static_metacall 
 };
 
-const QMetaObject MainWindow::staticMetaObject = {
-    { &QMainWindow::staticMetaObject, qt_meta_stringdata_MainWindow,
-      qt_meta_data_MainWindow, &staticMetaObjectExtraData }
+const QMetaObject Toravist::staticMetaObject = {
+    { &QMainWindow::staticMetaObject, qt_meta_stringdata_Toravist,
+      qt_meta_data_Toravist, &staticMetaObjectExtraData }
 };
 
 #ifdef Q_NO_DATA_RELOCATION
-const QMetaObject &MainWindow::getStaticMetaObject() { return staticMetaObject; }
+const QMetaObject &Toravist::getStaticMetaObject() { return staticMetaObject; }
 #endif //Q_NO_DATA_RELOCATION
 
-const QMetaObject *MainWindow::metaObject() const
+const QMetaObject *Toravist::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
 }
 
-void *MainWindow::qt_metacast(const char *_clname)
+void *Toravist::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_MainWindow))
-        return static_cast<void*>(const_cast< MainWindow*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_Toravist))
+        return static_cast<void*>(const_cast< Toravist*>(this));
     return QMainWindow::qt_metacast(_clname);
 }
 
-int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int Toravist::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QMainWindow::qt_metacall(_c, _id, _a);
     if (_id < 0)

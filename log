@@ -1,34 +1,20 @@
-commit d43cd156c49c4a14ed567c42bea33b0de44a872b
-Author: geghetsik <geghetsik@ubuntu.(none)>
-Date:   Sun Apr 20 22:13:51 2014 +0400
-
-    changed build structure
-
-commit 0c80f647930378eac6e6f6800f221796ae8c3369
-Author: geghetsik <geghetsik@ubuntu.(none)>
-Date:   Wed Apr 16 00:31:50 2014 +0400
-
-    build files
-
-commit fc0f30f592c65cba045610684db87a6390881643
-Author: geghetsik <geghetsik@ubuntu.(none)>
-Date:   Tue Apr 15 00:39:36 2014 +0400
-
-        Updated draft headers of following classes:
-        	AttributeAxis
-        	DataComponent
-
-commit c018c2c259a0b14aeb6bcddb9958ad5bc9081a90
-Author: geghetsik <geghetsik@ubuntu.(none)>
-Date:   Tue Apr 15 00:34:08 2014 +0400
-
-    Added draft headers of following classes:
-    	Task
-    	TargetConstrints
-    	DataEntry
-
-commit 47cad8f7cc09add4f27f30e6618170c35e4af694
-Author: geghetsik <geghetsik@ubuntu.(none)>
-Date:   Mon Apr 14 22:13:56 2014 +0400
-
-    first commit
+git rm	  .Makefile.swp
+git add	  Makefile
+git add	  Toravist.pro
+git add	  bin/Toravist
+git add	  include/AttributeAxis.hpp
+git rm	  include/AttributeValue.hpp
+git add	  include/AxesLayout.hpp
+git rm	  include/DataPoint.hpp
+git rm	  include/DataPolyLine.hpp
+git rm	  include/MainWindow.hpp
+git rm	  include/MappingPoint.hpp
+git add	  include/TargetConstraintPair.hpp
+git add	  include/a
+git add	  log
+git add	  moc_MainWindow.cpp
+git add	  obj/MainWindow.o
+git add	  obj/main.o
+git add	  obj/moc_MainWindow.o
+git rm	  src/MainWindow.cpp
+git add	  src/main.cpp
