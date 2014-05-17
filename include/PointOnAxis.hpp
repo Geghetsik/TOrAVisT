@@ -11,12 +11,13 @@
 #include <list>
 #include <string>
 
-#include <QGraphicsObject>
+#include <QGraphicsLineItem>
 
 //! Headers from current project
 
 //! Forward declarations 
 class QPaintEvent;
+class QGraphicsLineItem;
 class QDragEnterEvent;
 class QDragMoveEvent;
 class QDropEvent;
@@ -32,15 +33,23 @@ class DataComponent;
 
   This class implements the data component concept.
  */
-class PointOnAxis : public QGraphicsObject {
+class PointOnAxis : public QGraphicsLineItem {
 
 public:
+	enum { Type = UserType + 1 };
+
+	int type() const
+	{
+		// Enable the use of qgraphicsitem_cast with this item.
+		return Type;
+	}
+
 	PointOnAxis(QGraphicsItem* parent = 0);
 
 	bool   	isMappingPoint();
 	double  getValue();
 	std::string getRealValue();
-	std::list<DataComponent*>& getDataComponents();
+	QList<DataComponent*>& getDataComponents();
 	AttributeAxis* getAttributeAxis();
 	
 	void setValue (double value);
@@ -48,27 +57,19 @@ public:
 	void setIsMappingPoint(bool isMappingPoint);
 	void setAttributeAxis (AttributeAxis* attributeAxis);
 	void addDataComponent (DataComponent* dataComponent);
-	void drawDataPointLinksToAxis(AttributeAxis* axis, QPainter* painter);
 
-	QRectF boundingRect() const;
-	QPainterPath shape() const;
+	bool isPointOfInterest();
 
-protected:
-
-	void paint(QPainter* painter, const QStyleOptionGraphicsItem *option,
-				QWidget* parent = 0);
-
-	void dragEnterEvent(QDragEnterEvent *event);
-	void dragMoveEvent(QDragMoveEvent *event);
-	void dropEvent(QDropEvent *event);
-	void mousePressEvent(QMouseEvent *event);
+	void mousePressEvent(QGraphicsSceneMouseEvent *event);
+	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 	
 private:
-	bool						  _isMappingPoint;
-	double 						  _value;
-	std::string					  _realValue;
-	AttributeAxis*	  			  _attributeAxis;
-	std::list<DataComponent*>	  _dataComponents;	
+	bool					_isMappingPoint;
+	double 					_value;
+	std::string				_realValue;
+	AttributeAxis*	  		_attributeAxis;
+	QList<DataComponent*>	_dataComponents;	
 	
 };
 

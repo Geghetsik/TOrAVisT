@@ -9,6 +9,7 @@
 
 //! Headers from standard libraries
 #include <QMainWindow>
+#include <QToolBar>
 #include <list>
 
 //! Headers from current project
@@ -19,7 +20,10 @@ class QActionGroup;
 class QLabel;
 class QMenu;
 class QRadioButton;
+class QPushButton;
 class QGroupBox;
+class QComboBox;
+//class QToolBar;
 
 class Task;
 class AxesLayout;
@@ -44,22 +48,29 @@ class Toravist : public QMainWindow
 
 		private slots:
 			void loadData();
+			void taskGranularityChanged(QString newValue);
+			void taskNatureChanged(QString newValue);
+			void setTaskDefault();
 			void about();
 
 	private:
+		void createToolBox();
+		void createTaskToolbar();
+		void createViewToolBar();
 		void createActions();
 		void createMenus();
 
 		QMenu*	_fileMenu;
 		QMenu*	_taskMenu;
+		QMenu*	_viewMenu;
 		QMenu*	_helpMenu;
 
 		QAction*	_loadDataAct;
 		QAction*	_exitAct;
 		QAction*	_aboutAct;
-		QAction*	_newTask;
-		QAction*	_undo;
-		QAction*	_redo;
+		QAction*	_defaultViewAct;
+		QAction*	_undoAct;
+		QAction*	_redoAct;
 
 /*
 		std::list<Task*> 			_taskHistory;
@@ -67,23 +78,19 @@ class Toravist : public QMainWindow
 		Task* 						_currentTask;
 */		
 
-		QGroupBox*	_taskGranularityGroup;
-		QGroupBox*	_taskNatureGroup;
+		QComboBox*		_taskGranularityCombo;
+		QComboBox*		_taskNatureCombo;
+		QComboBox*		_viewScaleCombo;
+		QPushButton* 	_defaultViewBtn;
 
-		QRadioButton*	_elementaryTaskRadioBtn;
-		QRadioButton*	_synopticTaskRadioBtn;
-		QRadioButton*	_lookupTaskRadioBtn;
-		QRadioButton*	_comparisonTaskRadioBtn;
+		QToolBar*		_taskToolBar;
 
 		AxesLayout* 				_axesLayout;
-		std::list<DataEntry*>		_data;
-
 		QGraphicsView*				_view;
 
-	private:
-		void createTaskGroup();
-		void createGranularityGroup();
-		void createNatureGroup();
+		QList<DataEntry*>			_data;
+
+
 
 };
 

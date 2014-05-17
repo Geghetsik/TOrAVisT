@@ -15,6 +15,11 @@
 
 #include <DataEntry.hpp>
 
+DataEntry::DataEntry()
+{
+	setColor(Qt::gray);
+}
+
 QColor	DataEntry::getColor ()
 {
 	return _color;
@@ -50,6 +55,9 @@ void DataEntry::setColor (QColor color)
 void DataEntry::setIsDataOfInterest (bool isDataOfInterest)
 {
 	_isDataOfInterest = isDataOfInterest;
+	if (!isDataOfInterest) {
+		setColor(Qt::gray);
+	}
 }
 
 void DataEntry::addDataComponent (AttributeAxis* attribute, 

@@ -11,79 +11,202 @@
 
 //! Headers from current project
 #include <AttributeAxis.hpp>
+#include <AxesPairLink.hpp>
 #include <AxesLayout.hpp>
 #include <DataComponent.hpp>
+#include <DataEntry.hpp>
 #include <PointOnAxis.hpp>
+#include <PointsOnAxisLink.hpp>
+#include <Task.hpp>
 
-AxesLayout::AxesLayout (TaskGranularity granularity, TaskNature nature, 
+AxesLayout::AxesLayout (QString granularity, QString nature, 
 						QObject* parent)
 	: QGraphicsScene(parent)
 {
-	_granularity = granularity;
-	_nature = nature;
+	_task = new Task(granularity, nature, this);
+
+	_selectionAreaRect = new QGraphicsRectItem();
+	_selectionAreaRect->setVisible(false);
+	_selectionAreaRect->setPen(QPen(Qt::darkBlue));
+	_selectionAreaRect->setBrush(Qt::darkCyan);
+	_selectionAreaRect->setOpacity(0.25);
+	addItem(_selectionAreaRect);
 }
 
 void AxesLayout::addAttributeAxis(AttributeAxis* axis)
 {
 	addItem(axis);
-	_axesLayout.push_back(axis);
+	_axes.push_back(axis);
 }
+
+void AxesLayout::addAttributeAxes(std::vector<AttributeAxis*> axes)
+{
+	for (uint i = 0; i < axes.size(); ++i) {
+		addItem(axes[i]);
+		_axes.push_back(axes[i]);
+		axes[i]->setAxesLayout(this);
+	}
+	arrangeAxes();
+	createLinkedAxesPairs();
+}
+
 
 void AxesLayout::arrangeAxes()
 {
-	if (_axesLayout.empty()) {
+	if (_axes.empty()) {
 		std::cout << "Axes layout is empty" << std::endl;
 		return;
 	}
-	int size = _axesLayout.size();
-	qreal length = 8 * height() / 10;
-	qreal axisPosY = 9 * height() / 10;
+	int size = _axes.size();
+	qreal length = 98 * height() / 100;
+	qreal axisPosY = 99 * height() / 100;
 //	qreal axisY2 = height() / 10;
 	qreal offset = width() / (size + 1);
-	//std::cout << "ARRANGE AXES =============== " << offset << std::endl;
+	std::cout << "ARRANGE AXES =============== " << offset << std::endl;
 	for (int i = 0; i  < size; ++i) {
-		AttributeAxis* axis = _axesLayout[i];
+		AttributeAxis* axis = _axes[i];
 		qreal axisPosX = (i + 1) * offset;
 		axis->setPos(axisPosX, axisPosY);
 		axis->setRotation(-180);
 		axis->setLine(0, 0, 0, length);
 	}
 }
+
 void AxesLayout::remapDataPoints()
 {
-	if (_axesLayout.empty()) {
+	if (_axes.empty()) {
 		std::cout << "Axes layout is empty" << std::endl;
 		return;
 	}
-	for (unsigned i = 0; i  < _axesLayout.size(); ++i) {
-		_axesLayout[i]->remapDataPoints();
+	for (int i = 0; i  < _axes.size(); ++i) {
+		_axes[i]->remapDataPoints();
+	}
+	for (int i = 0; i < _linkedAxesPairs.size(); ++i) {
+		_linkedAxesPairs.at(i)->updateDataLinks();
 	}
 
 }
-/*
-void AxesLayout::paintEvent(QPaintEvent* event)
+
+void AxesLayout::createLinkedAxesPairs()
 {
-	QScrollArea::paintEvent(event);
-	std::cout << "Axes layout start" << std::endl;
-	// draw links between data points
-	if (_axesLayout.empty()) {
-		std::cout << "Axes layout is empty" << std::endl;
-		return;
-	}
-	QPainter painter(this);
-	painter.setPen(Qt::NoPen);
-	for (int i = 1; (i + 1) < _axesLayout.size(); ++i) {
-		AttributeAxis* axis1 = _axesLayout[i];
-		AttributeAxis* axis2 = _axesLayout[i+1];
-		std::map<double, PointOnAxis*>& map = axis1->getDataPointsMap();
-		std::map<double, PointOnAxis*>::iterator it;
+	for (int i = 0; (i + 1) < _axes.size(); ++i) {
+		std::cout << "AXES pair: " << i << _axes.size() << std::endl;
+		AttributeAxis* axis1 = _axes[i];
+		AttributeAxis* axis2 = _axes[i+1];
+		AxesPairLink* axesPair = new AxesPairLink(axis1, axis2);
+		_linkedAxesPairs.append(axesPair);
+
+		// add links of axesPair to scene/layout
+		QMap<DataEntry*, PointsOnAxisLink*>& map = axesPair->getDataLinks();
+		QMap<DataEntry*, PointsOnAxisLink*>::iterator it;
 		for (it = map.begin(); it != map.end(); ++it) {
-			it->second->drawDataPointLinksToAxis(axis2, &painter);
+			PointsOnAxisLink* link = map[it.key()];
+			addItem(link);
 		}
 	}
-	std::cout << "Axes layout end" << std::endl;
 }
 
-	*/
 
+void AxesLayout::updateLinks(AttributeAxis* axis)
+{
+	for (int i = 0; i < _linkedAxesPairs.size(); ++i) {
+		if (_linkedAxesPairs.at(i)->axesPairContains(axis)) {
+			_linkedAxesPairs.at(i)->updateDataLinks();
+		}
+	}
+}
 
+void AxesLayout::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+	QGraphicsScene::mousePressEvent(event);
+	if (event->modifiers() == 0 || event->modifiers() == Qt::CTRL) {
+		_selectionAreaRect->setRect(event->scenePos().x(), 
+				event->scenePos().y(), 0, 0);
+		_selectionAreaRect->setVisible(true);
+		std::cout<< "LAYOUT clicked" << std::endl;
+	}
+}
+
+void AxesLayout::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+	QGraphicsScene::mouseMoveEvent(event);
+	if (event->modifiers() == 0 || event->modifiers() == Qt::CTRL) {
+		if (QLineF(event->screenPos(), 
+				event->buttonDownScreenPos(Qt::LeftButton)).length() 
+				< QApplication::startDragDistance()) {
+			return;
+		}
+	
+		QRectF rect = QRectF(event->buttonDownScenePos(Qt::LeftButton), 
+				event->scenePos()).normalized();
+		_selectionAreaRect->setRect(rect);
+		QPainterPath path;
+		path.addRect(rect);
+		setSelectionArea(path);
+	}
+
+}
+
+void AxesLayout::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+	QGraphicsScene::mouseReleaseEvent(event);
+	if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton))
+			.length() < QApplication::startDragDistance()) {
+		return;
+	}
+	if (!selectedItems().isEmpty()) {
+		if (event->modifiers() == Qt::CTRL) {
+			_task->addToLastPattern(selectedItems());
+			_task->perform();
+		} else if (event->modifiers() == 0) {
+			_task->addNewPattern(selectedItems());
+			_task->perform();
+		}
+		clearSelection();
+	}
+	_selectionAreaRect->setVisible(false);
+	_selectionAreaRect->update();
+}
+
+QList<DataEntry*>* AxesLayout::getData ()
+{
+	return _data;
+}
+
+void AxesLayout::setData (QList<DataEntry*>* data)
+{
+	_data = data;
+}
+
+QList<AttributeAxis*>& AxesLayout::getAxes()
+{
+	return _axes;
+}
+
+void AxesLayout::updateAllLinks()
+{
+	for (int i = 0; i < _linkedAxesPairs.size(); ++i) {
+		_linkedAxesPairs.at(i)->updateDataLinks();
+	}
+}
+
+void AxesLayout::setTaskToDefault()
+{
+	delete _task;
+	_task = new Task(tr("Elementary"), tr("Comparison"), this);
+}
+
+void AxesLayout::setTaskGranularuty(QString granularity)
+{
+	_task->setGranularity(granularity);
+}
+
+void AxesLayout::setTaskNature(QString nature)
+{
+	_task->setNature(nature);
+}
+
+void AxesLayout::taskPerform()
+{
+	_task->perform();
+}

@@ -14,30 +14,55 @@
 //! Headers from current project
 
 //! Forward declarations
+class QGraphicsRectItem;
+
 class Toravist;
 class AttributeAxis;
+class AxesPairLink;
+class DataEntry;
+class Task;
 
-enum TaskGranularity {ELEMENTARY, SYNOPTIC};
-enum TaskNature {LOOKUP, COMPARISON};
 
 class AxesLayout : public QGraphicsScene {
 
+	Q_OBJECT
+
 	public:
-		AxesLayout(TaskGranularity granularity, TaskNature nature, 
+
+		AxesLayout(QString granularity, QString nature, 
 					QObject* parent = 0);
 
-		void addAttributeAxis(AttributeAxis* axis);
-		void paintEvent(QPaintEvent*);
-		void setAxesLayout(std::vector<AttributeAxis*> axes);
-		void arrangeAxes();
-		void remapDataPoints();
+		QList<DataEntry*>* getData();
+		void setData (QList<DataEntry*>* data);
+
+		QList<AttributeAxis*>& getAxes();
+
+		void addAttributeAxis (AttributeAxis* axis);
+		void addAttributeAxes (std::vector<AttributeAxis*> axes);
+		void setAxesLayout (std::vector<AttributeAxis*> axes);
+		void arrangeAxes ();
+		void remapDataPoints ();
+		void setTaskToDefault();
+		void setTaskGranularuty(QString granularity);
+		void setTaskNature(QString nature);
+		void taskPerform();
+
+		void createLinkedAxesPairs();
+		void updateLinks(AttributeAxis* axis);
+		void updateAllLinks();
+		void mousePressEvent(QGraphicsSceneMouseEvent *event);
+		void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+		void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
 
 	private:
 
-		std::vector<AttributeAxis*>	_axesLayout;
-		TaskGranularity				_granularity;
-		TaskNature					_nature;
+		QList<AttributeAxis*>	_axes;
+		QList<DataEntry*>*		_data;
 
+		QList<AxesPairLink*>	_linkedAxesPairs;
+		QGraphicsRectItem*		_selectionAreaRect;
+		Task*					_task;
 
 };
 

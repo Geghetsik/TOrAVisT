@@ -13,12 +13,8 @@
 //! Headers from current project
 
 //! Forward declarations 
-class QPaintEvent;
-class QDragEnterEvent;
-class QDragMoveEvent;
-class QDropEvent;
-
 class AttributeAxis;
+class PointOnAxis;
 class DataEntry;
 
 /*!
@@ -34,17 +30,20 @@ public:
 	
 	double getValue ();
 	std::string getRealValue ();
+	PointOnAxis* getPointOnAxis ();
 	AttributeAxis* getAttributeAxis ();
 	DataEntry* getDataEntry ();
 
 	void setValue (double value);
 	void setRealValue (std::string realValue);
+	void setPointOnAxis (PointOnAxis* point);
 	void setAttributeAxis (AttributeAxis* attributeAxis);
 	void setDataEntry (DataEntry* dataEntry);
 	
 private:
 	double 						  _value;
 	std::string					  _realValue;
+	PointOnAxis*				  _pointOnAxis;
 	AttributeAxis*	  			  _attributeAxis;
 	DataEntry*					  _dataEntry;	
 	

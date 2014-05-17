@@ -30,6 +30,11 @@ std::string DataComponent::getRealValue ()
 	return _realValue;
 }
 
+PointOnAxis* DataComponent::getPointOnAxis ()
+{
+	return _pointOnAxis;
+}
+
 AttributeAxis* DataComponent::getAttributeAxis ()
 {
 	return _attributeAxis;
@@ -48,6 +53,11 @@ void DataComponent::setValue (double value)
 void DataComponent::setRealValue (std::string realValue)
 {
 	_realValue = realValue;
+}
+
+void DataComponent::setPointOnAxis (PointOnAxis* point)
+{
+	_pointOnAxis = point;;
 }
 
 void DataComponent::setAttributeAxis (AttributeAxis* attributeAxis)

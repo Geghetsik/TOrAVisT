@@ -12,18 +12,22 @@ INCLUDEPATH += include
 # Input
 HEADERS += include/AttributeAxis.hpp \
            include/AxesLayout.hpp \
+           include/AxesPairLink.hpp \
            include/PointOnAxis.hpp \
+           include/PointsOnAxisLink.hpp \
            include/DataComponent.hpp \
            include/DataEntry.hpp \
-           include/TargetConstraintPair.hpp \
+           include/Pattern.hpp \
            include/Task.hpp \
 		   include/Toravist.hpp
 SOURCES += src/main.cpp \
 		   src/Toravist.cpp \
            src/AttributeAxis.cpp \
            src/AxesLayout.cpp \
+           src/AxesPairLink.cpp \
            src/DataComponent.cpp \
            src/DataEntry.cpp \
-           src/PointOnAxis.cpp 
-#          src/TargetConstraintPair.cpp \
-#          src/Task.cpp 
+           src/PointOnAxis.cpp \
+		   src/PointsOnAxisLink.cpp \
+           src/Pattern.cpp \
+	       src/Task.cpp 

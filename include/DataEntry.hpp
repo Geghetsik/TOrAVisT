@@ -27,6 +27,9 @@ class QColor;
 class DataEntry {
 
 	public:
+
+		DataEntry();
+
 		QColor	getColor ();
 		bool isDataOfInterest ();
 		double getValueOf (AttributeAxis* attribute);

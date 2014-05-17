@@ -39,6 +39,7 @@ class DataComponent;
 class AttributeAxis : public QGraphicsLineItem {
 
 	public:
+
 		AttributeAxis(QGraphicsItem* parent = 0);
 
 		double getMinValue();
@@ -46,16 +47,30 @@ class AttributeAxis : public QGraphicsLineItem {
 		std::map <double, PointOnAxis*>& getDataPointsMap();
 		PointOnAxis* getPointOnAxis(double value);
 		std::string& getAxisName();
+		AxesLayout* getAxesLayout();
 
+		void setAxesLayout(AxesLayout* layout);
 		void setAxisName(std::string name);
 		void addDataPoint(DataComponent* dataComponent);
 		void remapDataPoints();
 		void fixMappingPoints();
 		void mapPointsOnAxis();
-		std::list<double>* getMappingPointValues();
+
+		void updateNeighbourPositions(PointOnAxis* point, qreal dy);
+		void resetMappingPoints();
+		void removeMappingPoints();
+		void mapMinMaxPoints();
 
 		QRectF boundingRect() const;
 		QPainterPath shape() const;
+
+		void mousePressEvent(QGraphicsSceneMouseEvent *event);
+		void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+		void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
+	private:
+		std::list<double>* getMappingPointValues();
+		QList<PointOnAxis*>* getPointsOfInterestList();
 
 	protected:
 		void paint(QPainter* painter, 
@@ -66,6 +81,8 @@ class AttributeAxis : public QGraphicsLineItem {
 
 		std::string		_axisName;
 		std::map <double, PointOnAxis*> _dataPoints;
+
+		AxesLayout*		_axesLayout;
 
 };
 

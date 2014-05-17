@@ -25,22 +25,16 @@ Toravist::Toravist()
 	createActions();
 	createMenus();
 
-	createGranularityGroup();
-	createNatureGroup();
+	createTaskToolbar();
 
-	_axesLayout = new AxesLayout(ELEMENTARY, COMPARISON, this);
+	_axesLayout = new AxesLayout(_taskGranularityCombo->currentText(),
+		   						 _taskNatureCombo->currentText(), this);
+	//_axesLayout = new AxesLayout("Elementary", "Comparison", this);
 //	_axesLayout->setSceneRect(0, 0, 5000, 5000);
 	_axesLayout->setSceneRect(geometry());
 
-	QHBoxLayout *hbox = new QHBoxLayout;
-	hbox->addWidget(_taskGranularityGroup);
-	hbox->addWidget(_taskNatureGroup);
-
-	QWidget *topFiller = new QWidget;
-	topFiller->setLayout(hbox);
 
 	QVBoxLayout *layout = new QVBoxLayout;
-	layout->addWidget(topFiller);
 	_view = new QGraphicsView(_axesLayout);
 	layout->addWidget(_view);
 
@@ -51,51 +45,12 @@ Toravist::Toravist()
 	setWindowTitle(tr("Toravist"));
 }
 
-Toravist::~Toravist()
-{
-	for (std::list<DataEntry*>::iterator it = _data.begin();
-			it != _data.end(); ++it) {
-		delete (*it);
-	}
-}
-
-void Toravist::createGranularityGroup()
-{
-	_taskGranularityGroup = new QGroupBox(tr("Task Granularity"));
-
-	_elementaryTaskRadioBtn = new QRadioButton(tr("&Elementary"));
-	_synopticTaskRadioBtn = new QRadioButton(tr("&Synoptic"));
-	_elementaryTaskRadioBtn->setChecked(true);
-
-	QVBoxLayout *vbox = new QVBoxLayout;
-	vbox->addWidget(_elementaryTaskRadioBtn);
-	vbox->addWidget(_synopticTaskRadioBtn);
-	vbox->addStretch(1);
-	_taskGranularityGroup->setLayout(vbox);
-
-}
-
-void Toravist::createNatureGroup()
-{
-	_taskNatureGroup = new QGroupBox(tr("Task Nature"));
-
-	_lookupTaskRadioBtn = new QRadioButton(tr("&Lookup"));
-	_comparisonTaskRadioBtn = new QRadioButton(tr("&Comparison"));
-	_comparisonTaskRadioBtn->setChecked(true);
-
-	QVBoxLayout *vbox = new QVBoxLayout;
-	vbox->addWidget(_comparisonTaskRadioBtn);
-	vbox->addWidget(_lookupTaskRadioBtn);
-	vbox->addStretch(1);
-	_taskNatureGroup->setLayout(vbox);
-
-}
-
 void Toravist::loadData()
 {
 	std::cout << "Load Data start" << std::endl;
 	if(!_data.empty()) {
 		std::cout << " Data is already loaded" << std::endl;
+		setTaskDefault();
 		return;
 	}
 	std::vector<AttributeAxis*> axes;
@@ -104,32 +59,34 @@ void Toravist::loadData()
 		char axisName[20];
 		sprintf(axisName, "axis[%i]", i);
 		axes[i]->setAxisName(axisName);
-		_axesLayout->addAttributeAxis(axes[i]);
+//		_axesLayout->addAttributeAxis(axes[i]);
 		std::cout << "create axis : " << axes[i]->getAxisName() << std::endl;
 	}
 
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 8; i++) {
 		DataEntry* data = new DataEntry();
 		data->setIsDataOfInterest(false);
-		QColor color = QColor::fromHsv(i*(360/7), 180, 255);
-		data->setColor(color);
+	//	QColor color = QColor::fromHsv(i*(360/7), 180, 255);
+	//	data->setColor(color);
 		std::cout << "create data" << i << std::endl;
 		for (int j = 0; j<5; j++) {
 			char buf[10];
 			sprintf(buf, "%d", i);
 			std::string realValue (buf);
 			double assignedValue;
-			if (j%3 == 0) 
+			if (j%4 == 0) 
 				assignedValue = i;
-			if (j%3 == 1)
+			if (j%4 == 1)
 				assignedValue = 100 / (i+1);
-			if (j%3 == 2)
+			if (j%4 == 2)
 				assignedValue = 10 + i*i;
+			if (j%4 == 3)
+				assignedValue = 20 - 2*i;
+		std::cout << "Toravist:: create data" << i << " component " << j << "  " << assignedValue << std::endl;
 			DataComponent* dataComponent = new DataComponent();
 			dataComponent->setValue(assignedValue);
 			dataComponent->setRealValue(realValue);
-		//std::cout << "Toravist:: create data" << i << " component " << j << "  " << assignedValue << std::endl;
 			data->addDataComponent(axes[j], dataComponent);/* must perform 
 												dataComponent->setDataEntry
 												axis->addDataPoint
@@ -137,12 +94,16 @@ void Toravist::loadData()
 													dataComponent->setAxis.*/
 
 		}
-		_data.push_back(data);
+		_data.append(data);
 	}
+	std::cout << "AFTER Creating data" << std::endl;
 
-	_axesLayout->arrangeAxes();
-//	std::cout << "AFTER ArrangeAxes" << std::endl;
-	_axesLayout->remapDataPoints();
+	_axesLayout->setData(&_data);
+	_axesLayout->addAttributeAxes(axes);
+	//_axesLayout->arrangeAxes();
+	std::cout << "AFTER Set/Arrange Axes" << std::endl;
+	_axesLayout->taskPerform();
+	//_axesLayout->remapDataPoints();
 //	std::cout << "AFTER remapDataPoints" << std::endl;
 	_axesLayout->update();
 	_view->update();
@@ -183,9 +144,65 @@ void Toravist::createMenus()
 	_fileMenu->addSeparator();
 	_fileMenu->addAction(_exitAct);
 
-	_taskMenu = menuBar()->addMenu(tr("&Task"));
-
 	_helpMenu = menuBar()->addMenu(tr("&Help"));
 	_helpMenu->addAction(_aboutAct);
 
+}
+void Toravist::createToolBox()
+{
+
+}
+
+void Toravist::createTaskToolbar()
+{
+	_taskGranularityCombo = new QComboBox;
+	QStringList granularityValues;
+	granularityValues << tr("Elementary") << tr("Synoptic");
+	_taskGranularityCombo->addItems(granularityValues);
+	_taskGranularityCombo->setCurrentIndex(0);
+	connect(_taskGranularityCombo, SIGNAL(currentIndexChanged(QString)),
+			this, SLOT(taskGranularityChanged(QString)));
+
+	_taskNatureCombo = new QComboBox;
+	QStringList natureValues;
+	natureValues << tr("Comparison") << tr("Lookup");
+	_taskNatureCombo->addItems(natureValues);
+	_taskNatureCombo->setCurrentIndex(0);
+	connect(_taskNatureCombo, SIGNAL(currentIndexChanged(QString)),
+			this, SLOT(taskNatureChanged(QString)));
+	
+	_defaultViewBtn = new QPushButton("&Clear");
+	connect(_defaultViewBtn, SIGNAL(clicked(bool)), 
+			this, SLOT(setTaskDefault()));
+
+	_taskToolBar = addToolBar(tr("Task"));
+	_taskToolBar->addWidget(_taskGranularityCombo);
+	_taskToolBar->addWidget(_taskNatureCombo);
+	_taskToolBar->addWidget(_defaultViewBtn);
+}
+
+void Toravist::taskGranularityChanged(QString newValue)
+{
+	_axesLayout->setTaskGranularuty(newValue);
+	_axesLayout->taskPerform();
+}
+	
+void Toravist::taskNatureChanged(QString newValue)
+{
+	_axesLayout->setTaskNature(newValue);
+	_axesLayout->taskPerform();
+}
+
+void Toravist::setTaskDefault()
+{
+	_axesLayout->setTaskToDefault();
+	_axesLayout->taskPerform();
+}	
+
+Toravist::~Toravist()
+{
+	for (int i = 0; i < _data.size(); ++i) {
+		delete _data.at(i);
+	}
+	delete _axesLayout;
 }
