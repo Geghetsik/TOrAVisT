@@ -21,6 +21,7 @@ class QGraphicsLineItem;
 class QGraphicsScene;
 class QRectF;
 class QGraphicsSceneMouseEvent;
+class QGraphicsSimpleTextItem;
 class QPainterPath;
 
 
@@ -40,29 +41,33 @@ class AttributeAxis : public QGraphicsLineItem {
 
 	public:
 
-		AttributeAxis(QGraphicsItem* parent = 0);
+		AttributeAxis(QString name, QGraphicsItem* parent = 0);
 
 		double getMinValue();
 		double getMaxValue();
 		std::map <double, PointOnAxis*>& getDataPointsMap();
 		PointOnAxis* getPointOnAxis(double value);
-		std::string& getAxisName();
+		QGraphicsSimpleTextItem* getAxisName();
 		AxesLayout* getAxesLayout();
 
 		void setAxesLayout(AxesLayout* layout);
-		void setAxisName(std::string name);
+		void setAxisName(QString name);
+		void setAxisNamePos(qreal x, qreal y);
 		void addDataPoint(DataComponent* dataComponent);
 		void remapDataPoints();
 		void fixMappingPoints();
 		void mapPointsOnAxis();
+		
+		void updateNeighbourLinks();
 
-		void updateNeighbourPositions(PointOnAxis* point, qreal dy);
 		void resetMappingPoints();
 		void removeMappingPoints();
 		void mapMinMaxPoints();
 
 		QRectF boundingRect() const;
 		QPainterPath shape() const;
+		bool isBetweenNeighbourPositionsOfPoint(PointOnAxis* dataPoint,
+												QPointF point);
 
 		void mousePressEvent(QGraphicsSceneMouseEvent *event);
 		void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -79,7 +84,7 @@ class AttributeAxis : public QGraphicsLineItem {
 
 	private:
 
-		std::string		_axisName;
+		QGraphicsSimpleTextItem*		_axisName;
 		std::map <double, PointOnAxis*> _dataPoints;
 
 		AxesLayout*		_axesLayout;

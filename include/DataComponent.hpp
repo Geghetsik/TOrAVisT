@@ -26,23 +26,23 @@ class DataEntry;
 class DataComponent {
 
 public:
-	DataComponent();
+	DataComponent(qreal numValue, QString realValue);
 	
 	double getValue ();
-	std::string getRealValue ();
+	QString getRealValue ();
 	PointOnAxis* getPointOnAxis ();
 	AttributeAxis* getAttributeAxis ();
 	DataEntry* getDataEntry ();
 
 	void setValue (double value);
-	void setRealValue (std::string realValue);
+	void setRealValue (QString realValue);
 	void setPointOnAxis (PointOnAxis* point);
 	void setAttributeAxis (AttributeAxis* attributeAxis);
 	void setDataEntry (DataEntry* dataEntry);
 	
 private:
 	double 						  _value;
-	std::string					  _realValue;
+	QString						  _realValue;
 	PointOnAxis*				  _pointOnAxis;
 	AttributeAxis*	  			  _attributeAxis;
 	DataEntry*					  _dataEntry;	

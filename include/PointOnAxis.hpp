@@ -18,6 +18,7 @@
 //! Forward declarations 
 class QPaintEvent;
 class QGraphicsLineItem;
+class QGraphicsSimpleTextItem;
 class QDragEnterEvent;
 class QDragMoveEvent;
 class QDropEvent;
@@ -44,32 +45,34 @@ public:
 		return Type;
 	}
 
-	PointOnAxis(QGraphicsItem* parent = 0);
+	PointOnAxis(qreal numValue, QString value, QGraphicsItem* parent = 0);
 
 	bool   	isMappingPoint();
 	double  getValue();
-	std::string getRealValue();
+	QGraphicsSimpleTextItem* getRealValue();
 	QList<DataComponent*>& getDataComponents();
 	AttributeAxis* getAttributeAxis();
 	
 	void setValue (double value);
-	void setRealValue (std::string realValue);
+	void setRealValue (QString realValue);
 	void setIsMappingPoint(bool isMappingPoint);
 	void setAttributeAxis (AttributeAxis* attributeAxis);
 	void addDataComponent (DataComponent* dataComponent);
 
 	bool isPointOfInterest();
+	bool isBetweenNeighbourPositions(qreal dy);
 
-	void mousePressEvent(QGraphicsSceneMouseEvent *event);
+protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+	void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+	void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 	
 private:
-	bool					_isMappingPoint;
-	double 					_value;
-	std::string				_realValue;
-	AttributeAxis*	  		_attributeAxis;
-	QList<DataComponent*>	_dataComponents;	
+	bool						_isMappingPoint;
+	double 						_value;
+	QGraphicsSimpleTextItem*	_realValue;
+	AttributeAxis*	  			_attributeAxis;
+	QList<DataComponent*>		_dataComponents;	
 	
 };
 

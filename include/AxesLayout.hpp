@@ -46,6 +46,7 @@ class AxesLayout : public QGraphicsScene {
 		void setTaskGranularuty(QString granularity);
 		void setTaskNature(QString nature);
 		void taskPerform();
+		void taskClear();
 
 		void createLinkedAxesPairs();
 		void updateLinks(AttributeAxis* axis);

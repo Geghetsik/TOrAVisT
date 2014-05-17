@@ -149,7 +149,6 @@ void AxesLayout::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void AxesLayout::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-	QGraphicsScene::mouseReleaseEvent(event);
 	if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton))
 			.length() < QApplication::startDragDistance()) {
 		return;
@@ -166,6 +165,7 @@ void AxesLayout::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	}
 	_selectionAreaRect->setVisible(false);
 	_selectionAreaRect->update();
+	QGraphicsScene::mouseReleaseEvent(event);
 }
 
 QList<DataEntry*>* AxesLayout::getData ()
@@ -209,4 +209,14 @@ void AxesLayout::setTaskNature(QString nature)
 void AxesLayout::taskPerform()
 {
 	_task->perform();
+}
+	
+void AxesLayout::taskClear()
+{
+	Task* newTask = new Task(_task->getGranularity(), 
+							 _task->getNature(), this);
+	delete _task;
+	_task = newTask;
+	arrangeAxes();
+	taskPerform();
 }

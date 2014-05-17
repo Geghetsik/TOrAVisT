@@ -51,6 +51,7 @@ class Toravist : public QMainWindow
 			void taskGranularityChanged(QString newValue);
 			void taskNatureChanged(QString newValue);
 			void setTaskDefault();
+			void taskClear();
 			void about();
 
 	private:

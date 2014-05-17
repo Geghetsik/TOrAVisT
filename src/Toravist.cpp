@@ -29,8 +29,6 @@ Toravist::Toravist()
 
 	_axesLayout = new AxesLayout(_taskGranularityCombo->currentText(),
 		   						 _taskNatureCombo->currentText(), this);
-	//_axesLayout = new AxesLayout("Elementary", "Comparison", this);
-//	_axesLayout->setSceneRect(0, 0, 5000, 5000);
 	_axesLayout->setSceneRect(geometry());
 
 
@@ -55,12 +53,12 @@ void Toravist::loadData()
 	}
 	std::vector<AttributeAxis*> axes;
 	for (int i = 0; i < 5; i++) {
-		axes.push_back (new AttributeAxis());
-		char axisName[20];
-		sprintf(axisName, "axis[%i]", i);
-		axes[i]->setAxisName(axisName);
-//		_axesLayout->addAttributeAxis(axes[i]);
-		std::cout << "create axis : " << axes[i]->getAxisName() << std::endl;
+//		char axisName[20];
+//		sprintf(axisName, "axis[%i]", i);
+		axes.push_back (new AttributeAxis(QString(QObject::tr("axis")) +
+										  QString::number(i)));
+//		axes[i]->setAxisName(axisName);
+//		std::cout << "create axis : " << axes[i]->getAxisName() << std::endl;
 	}
 
 
@@ -73,20 +71,25 @@ void Toravist::loadData()
 		for (int j = 0; j<5; j++) {
 			char buf[10];
 			sprintf(buf, "%d", i);
-			std::string realValue (buf);
 			double assignedValue;
-			if (j%4 == 0) 
+			if (j%4 == 0) { 
 				assignedValue = i;
+			}
 			if (j%4 == 1)
 				assignedValue = 100 / (i+1);
 			if (j%4 == 2)
 				assignedValue = 10 + i*i;
 			if (j%4 == 3)
 				assignedValue = 20 - 2*i;
+			QString realValue = QString::number(assignedValue);
+			if (j == 0) { 
+				realValue += QString(QObject::tr("color"));
+			}
 		std::cout << "Toravist:: create data" << i << " component " << j << "  " << assignedValue << std::endl;
-			DataComponent* dataComponent = new DataComponent();
-			dataComponent->setValue(assignedValue);
-			dataComponent->setRealValue(realValue);
+			DataComponent* dataComponent = new DataComponent(assignedValue,
+															 realValue);
+		//	dataComponent->setValue(assignedValue);
+		//	dataComponent->setRealValue(realValue);
 			data->addDataComponent(axes[j], dataComponent);/* must perform 
 												dataComponent->setDataEntry
 												axis->addDataPoint
@@ -173,7 +176,8 @@ void Toravist::createTaskToolbar()
 	
 	_defaultViewBtn = new QPushButton("&Clear");
 	connect(_defaultViewBtn, SIGNAL(clicked(bool)), 
-			this, SLOT(setTaskDefault()));
+			this, SLOT(taskClear()));
+			//this, SLOT(setTaskDefault()));
 
 	_taskToolBar = addToolBar(tr("Task"));
 	_taskToolBar->addWidget(_taskGranularityCombo);
@@ -196,8 +200,16 @@ void Toravist::taskNatureChanged(QString newValue)
 void Toravist::setTaskDefault()
 {
 	_axesLayout->setTaskToDefault();
+	_axesLayout->arrangeAxes();
 	_axesLayout->taskPerform();
+	_taskNatureCombo->setCurrentIndex(0);
+	_taskGranularityCombo->setCurrentIndex(0);
 }	
+
+void Toravist::taskClear()
+{
+	_axesLayout->taskClear();
+}
 
 Toravist::~Toravist()
 {

@@ -1,9 +1,109 @@
-git rm    src/AttributeAxis.hpp
-git rm    src/DataComponent.hpp
-git rm    src/DataEntry.hpp
-git rm    src/Makefile
-git rm    src/TargetConstraintPair.hpp
-git rm    src/Task.hpp
-git rm    src/Toravist
-git rm    src/main.o
-git rm    src/src.pro
+diff --git a/src/AttributeAxis.cpp b/src/AttributeAxis.cpp
+index 5e0ae93..4849810 100644
+--- a/src/AttributeAxis.cpp
++++ b/src/AttributeAxis.cpp
+@@ -17,11 +17,14 @@
+ #include <DataComponent.hpp>
+ #include <PointOnAxis.hpp>
+ 
+-AttributeAxis::AttributeAxis(QGraphicsItem* parent)
++AttributeAxis::AttributeAxis(QString name, QGraphicsItem* parent)
+ 	: QGraphicsLineItem(parent)
+ {
+ 	setFlag(QGraphicsItem::ItemIsMovable, true);
+ 	setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
++	_axisName = new QGraphicsSimpleTextItem(name, this);
++	_axisName->setRotation(180);
++	_axisName->setPos(_axisName->boundingRect().width() / 2 /*15*/, -10);
+ }
+ 
+ QRectF AttributeAxis::boundingRect() const
+@@ -62,12 +65,12 @@ void AttributeAxis::paint(QPainter* painter,
+ //	std::cout << "Axis:: paint end " << std::endl;
+ }
+ 
+-void AttributeAxis::setAxisName(std::string name)
++void AttributeAxis::setAxisName(QString name)
+ {
+-	_axisName = std::string(name);
++	_axisName->setText(name);
+ }
+ 
+-std::string& AttributeAxis::getAxisName()
++QGraphicsSimpleTextItem* AttributeAxis::getAxisName()
+ {
+ 	return _axisName;
+ }
+@@ -107,10 +110,8 @@ void AttributeAxis::addDataPoint(DataComponent* dataComponent)
+ 		point = _dataPoints[value];
+ 		point->addDataComponent(dataComponent);
+ 	} else {
+-		point = new PointOnAxis(this);
++		point = new PointOnAxis(value, dataComponent->getRealValue(), this);
+ 		point->setParentItem(this);
+-		point->setValue(value);
+-		point->setRealValue(dataComponent->getRealValue());
+ 		point->addDataComponent(dataComponent);
+ 		_dataPoints[value] = point;
+ //	std::cout << "After adding to dataEntry" << std::endl;
+@@ -233,13 +234,12 @@ void AttributeAxis::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+ 	if (event->modifiers() == Qt::SHIFT) {
+ 		QGraphicsLineItem::mouseMoveEvent(event);
+ 		if (QLineF(event->screenPos(), 
+-				event->buttonDownScreenPos(Qt::LeftButton)).length()
++					event->buttonDownScreenPos(Qt::LeftButton)).length()
+ 				< QApplication::startDragDistance()) {
+ 			return;
+ 		}
+ 		update();
+ 		_axesLayout->updateLinks(this);
+-//	} else {
+ 	}
+ }
+ 
+@@ -247,16 +247,8 @@ void AttributeAxis::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+ {
+ 	if (event->modifiers() == Qt::SHIFT) {
+ 		setCursor(Qt::OpenHandCursor);
+-		QGraphicsLineItem::mouseReleaseEvent(event);
+-//	} else {
+ 	}
+-}
+-
+-
+-void AttributeAxis::updateNeighbourPositions(PointOnAxis* point, qreal dy)
+-{
+-	// move neighbour points
+-	_axesLayout->updateLinks(this);
++	QGraphicsLineItem::mouseReleaseEvent(event);
+ }
+ 
+ void AttributeAxis::mapMinMaxPoints()
+@@ -315,3 +307,27 @@ void AttributeAxis::removeMappingPoints()
+ 		it->second->setIsMappingPoint(false);
+ 	}
+ }
++		
++void AttributeAxis::setAxisNamePos(qreal x, qreal y)
++{
++	_axisName->setPos(x, y);
++}
++
++bool AttributeAxis::isBetweenNeighbourPositionsOfPoint(PointOnAxis* dataPoint,
++														QPointF point)
++{
++	std::map<double, PointOnAxis*>::iterator it = 
++		_dataPoints.find(dataPoint->getValue());
++	std::map<double, PointOnAxis*>::iterator prev = --it;
++	++it;
++	std::map<double, PointOnAxis*>::iterator next = ++it;
++	qreal prevY = prev->second->pos().y();
++	qreal nextY = next->second->pos().y();
++	qreal pointY = point.y();
++	return ((prevY <= pointY) && (pointY <= nextY));
++}
++
++void AttributeAxis::updateNeighbourLinks()
++{
++	_axesLayout->updateLinks(this);
++}

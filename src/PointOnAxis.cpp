@@ -16,14 +16,19 @@
 
 #include <PointOnAxis.hpp>
 
-PointOnAxis::PointOnAxis(QGraphicsItem* parent)
+PointOnAxis::PointOnAxis(qreal numValue, QString value, QGraphicsItem* parent)
 	: QGraphicsLineItem(parent)
 {
 	_attributeAxis = dynamic_cast<AttributeAxis*> (parent);
 	setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-	setIsMappingPoint(false);
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 	setFlag(QGraphicsItem::ItemIsMovable, true);
+	setAcceptHoverEvents(true);
+	_value = numValue;
+	_realValue = new QGraphicsSimpleTextItem(value, this);
+	_realValue->setRotation(180);
+	_realValue->setPos(-10, 10);
+	setIsMappingPoint(false);
 }
 
 
@@ -48,7 +53,7 @@ double PointOnAxis::getValue()
 	return _value;
 }
 
-std::string PointOnAxis::getRealValue ()
+QGraphicsSimpleTextItem* PointOnAxis::getRealValue ()
 {
 	return _realValue;
 }
@@ -59,9 +64,9 @@ void PointOnAxis::setValue (double value)
 	_value = value;
 }
 
-void PointOnAxis::setRealValue (std::string realValue)
+void PointOnAxis::setRealValue (QString realValue)
 {
-	_realValue = realValue;
+	_realValue->setText(realValue);
 }
 
 void PointOnAxis::setAttributeAxis (AttributeAxis* attributeAxis)
@@ -78,17 +83,11 @@ void PointOnAxis::setIsMappingPoint(bool isMappingPoint)
 {
 	_isMappingPoint = isMappingPoint;
 	if (isMappingPoint) {
-	setLine(-8, 0, 8, 0);
+		setLine(-8, 0, 8, 0);
+		_realValue->show();
 	} else {
-	setLine(-5, 0, 5, 0);
-	}
-}
-
-void PointOnAxis::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-	if (event->modifiers() == Qt::SHIFT) {
-		setCursor(Qt::ClosedHandCursor);
-		QGraphicsLineItem::mousePressEvent(event);
+		setLine(-5, 0, 5, 0);
+		_realValue->hide();
 	}
 }
 
@@ -101,16 +100,11 @@ void PointOnAxis::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			return;
 		}
 		qreal dy = event->pos().y();
-		_attributeAxis->updateNeighbourPositions(this, dy);
-		setPos(mapToParent(0, event->pos().y()));
+		if (isBetweenNeighbourPositions(dy)) {
+			setPos(mapToParent(0, dy));
+			_attributeAxis->updateNeighbourLinks();
+		};
 		update();
-	}
-}
-
-void PointOnAxis::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-	if (event->modifiers() == Qt::SHIFT) {
-		setCursor(Qt::OpenHandCursor);
 	}
 }
 
@@ -123,4 +117,24 @@ bool PointOnAxis::isPointOfInterest()
 		}
 	}
 	return false;
+}
+
+void PointOnAxis::hoverEnterEvent(QGraphicsSceneHoverEvent *)
+{
+	if (!isMappingPoint()) {
+		_realValue->show();
+	}
+}
+
+void PointOnAxis::hoverLeaveEvent(QGraphicsSceneHoverEvent *)
+{
+	if (!isMappingPoint()) {
+		_realValue->hide();
+	}
+}
+
+bool PointOnAxis::isBetweenNeighbourPositions(qreal dy)
+{
+	return _attributeAxis->isBetweenNeighbourPositionsOfPoint(this, 
+															mapToParent(0, dy));
 }

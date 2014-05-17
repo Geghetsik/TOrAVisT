@@ -14,10 +14,12 @@
 
 #include <DataComponent.hpp>
 
-DataComponent::DataComponent()
+DataComponent::DataComponent(qreal numValue, QString realValue)
 {
 	_attributeAxis = NULL;
 	_dataEntry = NULL;	
+	_value = numValue;
+	_realValue = realValue;
 }
 
 double DataComponent::getValue ()
@@ -25,7 +27,7 @@ double DataComponent::getValue ()
 	return _value;
 }
 
-std::string DataComponent::getRealValue ()
+QString DataComponent::getRealValue ()
 {
 	return _realValue;
 }
@@ -50,7 +52,7 @@ void DataComponent::setValue (double value)
 	_value = value;
 }
 
-void DataComponent::setRealValue (std::string realValue)
+void DataComponent::setRealValue (QString realValue)
 {
 	_realValue = realValue;
 }

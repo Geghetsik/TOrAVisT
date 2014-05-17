@@ -36,6 +36,9 @@ public:
 	void 	setGranularity(QString granularity);
 	void	setNature(QString nature);
 
+	QString 	getGranularity();
+	QString		getNature();
+
 	void	addToLastPattern(QList<QGraphicsItem*> dataPoints);
 	void	addNewPattern(QList<QGraphicsItem*> dataPoints);
 	void	perform();

@@ -17,7 +17,7 @@
 
 DataEntry::DataEntry()
 {
-	setColor(Qt::gray);
+	setColor(Qt::lightGray);
 }
 
 QColor	DataEntry::getColor ()
@@ -56,7 +56,7 @@ void DataEntry::setIsDataOfInterest (bool isDataOfInterest)
 {
 	_isDataOfInterest = isDataOfInterest;
 	if (!isDataOfInterest) {
-		setColor(Qt::gray);
+		setColor(Qt::lightGray);
 	}
 }
 
