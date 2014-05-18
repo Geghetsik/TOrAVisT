@@ -46,6 +46,8 @@ class Toravist : public QMainWindow
 
 	protected:
 
+		void resizeEvent(QResizeEvent* event);
+
 		private slots:
 			void loadData();
 			void taskGranularityChanged(QString newValue);

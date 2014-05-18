@@ -55,6 +55,15 @@ class AxesLayout : public QGraphicsScene {
 		void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 		void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+		void reArrangeAxis(AttributeAxis* axis);
+
+	private:
+		void placeAxisAtFront(AttributeAxis* axis);
+		void placeAxisAtEnd(AttributeAxis* axis);
+		void placeAxisRight(int nextAxisIndex, AttributeAxis* axis);
+		void placeAxisLeft(int prevAxisIndex, AttributeAxis* axis);
+		void removeAxisFromHere(int index, AttributeAxis* axis);
+		void placeAxisBetween(int prev, int next, AttributeAxis* axis);
 
 	private:
 

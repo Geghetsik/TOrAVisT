@@ -238,14 +238,14 @@ void AttributeAxis::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 		}
 		setPos(mapToParent(event->pos() - 
 						   event->buttonDownPos(Qt::LeftButton)));
-		update();
 		_axesLayout->updateLinks(this);
 	}
 }
 
-void AttributeAxis::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void AttributeAxis::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {
 	setCursor(Qt::OpenHandCursor);
+	_axesLayout->reArrangeAxis(this);
 }
 
 void AttributeAxis::mapMinMaxPoints()

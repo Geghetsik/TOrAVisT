@@ -218,3 +218,8 @@ Toravist::~Toravist()
 	}
 	delete _axesLayout;
 }
+
+void Toravist::resizeEvent(QResizeEvent* event)
+{
+}
+
